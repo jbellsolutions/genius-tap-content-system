@@ -1,0 +1,317 @@
+[
+  {
+    "name": "Jon Buchan",
+    "email_count": 2274,
+    "primary_style": "playful-pattern-interrupt",
+    "signature_patterns": [
+      "humor hooks that disarm before the pitch",
+      "self-deprecating openings that build instant likability",
+      "absurd analogies that make the reader laugh and remember",
+      "fourth-wall breaks acknowledging the reader knows they are being sold to",
+      "conversational tone that reads like a text from a witty friend"
+    ],
+    "best_for": [
+      "cold emails",
+      "ice-breaker linkedin posts",
+      "connection request follow-ups",
+      "newsletter openers",
+      "reply-driven outreach"
+    ],
+    "voice_traits": {
+      "energy": "high",
+      "formality": "low",
+      "humor": "high",
+      "storytelling": "medium",
+      "contrarian": "medium"
+    },
+    "content_type_fit": {
+      "cold_email": 10,
+      "linkedin_post_authority": 5,
+      "linkedin_post_story": 6,
+      "linkedin_post_tactical": 4,
+      "article": 5,
+      "newsletter": 9,
+      "social_caption": 7
+    }
+  },
+  {
+    "name": "Todd Brown",
+    "email_count": 619,
+    "primary_style": "mechanism-focused-educational",
+    "signature_patterns": [
+      "names and frames proprietary mechanisms",
+      "builds curiosity through the mechanism behind the result",
+      "educational hooks that teach while selling",
+      "here is why what you have been told is wrong structure",
+      "positions frameworks as discoveries not opinions"
+    ],
+    "best_for": [
+      "course and info-product launches",
+      "consultant authority posts",
+      "educational linkedin articles",
+      "lead magnets",
+      "webinar promotion emails"
+    ],
+    "voice_traits": {
+      "energy": "medium",
+      "formality": "medium-high",
+      "humor": "low",
+      "storytelling": "high",
+      "contrarian": "high"
+    },
+    "content_type_fit": {
+      "cold_email": 5,
+      "linkedin_post_authority": 8,
+      "linkedin_post_story": 6,
+      "linkedin_post_tactical": 8,
+      "article": 9,
+      "newsletter": 6,
+      "social_caption": 4
+    }
+  },
+  {
+    "name": "Bill Mueller",
+    "email_count": 279,
+    "primary_style": "story-driven-curiosity",
+    "signature_patterns": [
+      "open loops that keep the reader scrolling",
+      "nested stories (a story within a story)",
+      "I never told anyone this but reveals that create intimacy",
+      "emotional arcs from struggle to insight with delayed reveal",
+      "specific sensory detail that paints scenes"
+    ],
+    "best_for": [
+      "personal brand storytelling",
+      "coaching and advisory content",
+      "linkedin narrative posts",
+      "newsletter main stories",
+      "long-form emotional content"
+    ],
+    "voice_traits": {
+      "energy": "medium",
+      "formality": "medium",
+      "humor": "low",
+      "storytelling": "very-high",
+      "contrarian": "low"
+    },
+    "content_type_fit": {
+      "cold_email": 3,
+      "linkedin_post_authority": 6,
+      "linkedin_post_story": 10,
+      "linkedin_post_tactical": 3,
+      "article": 10,
+      "newsletter": 8,
+      "social_caption": 4
+    }
+  },
+  {
+    "name": "Jay Abraham",
+    "email_count": 308,
+    "primary_style": "strategic-leverage",
+    "signature_patterns": [
+      "abundance thinking and leverage framing",
+      "most people framing that segments the audience",
+      "cross-industry pattern matching",
+      "strategic contrarianism that reframes assumptions",
+      "preeminence positioning as trusted advisor not vendor"
+    ],
+    "best_for": [
+      "high-ticket B2B content",
+      "strategic advisory posts",
+      "thought leadership articles",
+      "keynote preparation content",
+      "joint venture outreach"
+    ],
+    "voice_traits": {
+      "energy": "medium",
+      "formality": "high",
+      "humor": "low",
+      "storytelling": "medium",
+      "contrarian": "high"
+    },
+    "content_type_fit": {
+      "cold_email": 5,
+      "linkedin_post_authority": 10,
+      "linkedin_post_story": 5,
+      "linkedin_post_tactical": 6,
+      "article": 9,
+      "newsletter": 6,
+      "social_caption": 5
+    }
+  },
+  {
+    "name": "Brian Kurtz",
+    "email_count": 422,
+    "primary_style": "insider-authority-direct-response",
+    "signature_patterns": [
+      "I learned from the legends narratives",
+      "earned name-dropping as part of the story",
+      "insider access feel and secret history hooks",
+      "heritage credibility connecting to proven lineage",
+      "direct response tradition applied to modern channels"
+    ],
+    "best_for": [
+      "newsletter content for list builders",
+      "authority-building linkedin articles",
+      "long-form direct response emails",
+      "book launch content",
+      "marketing-audience content"
+    ],
+    "voice_traits": {
+      "energy": "medium",
+      "formality": "medium-high",
+      "humor": "low",
+      "storytelling": "high",
+      "contrarian": "medium"
+    },
+    "content_type_fit": {
+      "cold_email": 4,
+      "linkedin_post_authority": 8,
+      "linkedin_post_story": 7,
+      "linkedin_post_tactical": 5,
+      "article": 10,
+      "newsletter": 10,
+      "social_caption": 3
+    }
+  },
+  {
+    "name": "Alex Hormozi",
+    "email_count": 553,
+    "primary_style": "value-stacking-contrarian",
+    "signature_patterns": [
+      "brutal honesty that feels refreshing",
+      "free is better than paid positioning",
+      "value equation breakdowns with math",
+      "contrarian reframes flipping conventional advice",
+      "here is what I would do if I were you directness"
+    ],
+    "best_for": [
+      "offer-centric linkedin posts",
+      "operator and agency content",
+      "lead magnet promotion",
+      "pricing justification content",
+      "short-form punchy posts"
+    ],
+    "voice_traits": {
+      "energy": "very-high",
+      "formality": "low",
+      "humor": "low",
+      "storytelling": "medium",
+      "contrarian": "very-high"
+    },
+    "content_type_fit": {
+      "cold_email": 8,
+      "linkedin_post_authority": 10,
+      "linkedin_post_story": 5,
+      "linkedin_post_tactical": 8,
+      "article": 6,
+      "newsletter": 5,
+      "social_caption": 10
+    }
+  },
+  {
+    "name": "Tom Bilyeu",
+    "email_count": 431,
+    "primary_style": "mindset-aspirational",
+    "signature_patterns": [
+      "identity-level reframes about who you need to become",
+      "rock bottom to breakthrough story arcs",
+      "existential urgency without manipulation",
+      "philosophical depth in accessible language",
+      "mentor-voice that makes the reader feel coached"
+    ],
+    "best_for": [
+      "personal development content",
+      "founder journey narratives",
+      "mindset-shift posts",
+      "motivational newsletter content",
+      "community-building content"
+    ],
+    "voice_traits": {
+      "energy": "high",
+      "formality": "medium",
+      "humor": "low",
+      "storytelling": "very-high",
+      "contrarian": "medium"
+    },
+    "content_type_fit": {
+      "cold_email": 3,
+      "linkedin_post_authority": 7,
+      "linkedin_post_story": 10,
+      "linkedin_post_tactical": 3,
+      "article": 9,
+      "newsletter": 8,
+      "social_caption": 7
+    }
+  },
+  {
+    "name": "Lead Gen Jay",
+    "email_count": 367,
+    "primary_style": "b2b-tactical-specificity",
+    "signature_patterns": [
+      "exact step-by-step process breakdowns",
+      "screenshot-style specificity with tools and numbers",
+      "ROI framing that makes the math obvious",
+      "steal this generosity that builds trust through openness",
+      "content that IS the proof of expertise"
+    ],
+    "best_for": [
+      "B2B service provider content",
+      "lead generation how-to posts",
+      "tactical linkedin carousels",
+      "cold outreach templates",
+      "agency content"
+    ],
+    "voice_traits": {
+      "energy": "medium",
+      "formality": "low",
+      "humor": "low",
+      "storytelling": "low",
+      "contrarian": "low"
+    },
+    "content_type_fit": {
+      "cold_email": 7,
+      "linkedin_post_authority": 6,
+      "linkedin_post_story": 3,
+      "linkedin_post_tactical": 10,
+      "article": 7,
+      "newsletter": 5,
+      "social_caption": 6
+    }
+  },
+  {
+    "name": "Liam Ottley",
+    "email_count": 463,
+    "primary_style": "ai-technical-demystifier",
+    "signature_patterns": [
+      "demystifying complex technology for business audiences",
+      "the stack behind breakdowns without jargon overload",
+      "build-in-public transparency with revenue and tools",
+      "future-casting with receipts not speculation",
+      "bridging technology understanding and business application"
+    ],
+    "best_for": [
+      "AI agency content",
+      "tech founder posts",
+      "SaaS content",
+      "build-in-public narratives",
+      "technology-meets-business content"
+    ],
+    "voice_traits": {
+      "energy": "high",
+      "formality": "medium",
+      "humor": "low",
+      "storytelling": "medium",
+      "contrarian": "medium"
+    },
+    "content_type_fit": {
+      "cold_email": 6,
+      "linkedin_post_authority": 7,
+      "linkedin_post_story": 5,
+      "linkedin_post_tactical": 9,
+      "article": 8,
+      "newsletter": 6,
+      "social_caption": 8
+    }
+  }
+]

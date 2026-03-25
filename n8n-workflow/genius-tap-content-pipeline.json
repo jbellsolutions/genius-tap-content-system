@@ -1,0 +1,604 @@
+{
+  "name": "The Genius Tap - Content Pipeline (Creator > Critic > Approver)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "trigger-manual",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [220, 460]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * 1-5"
+            }
+          ]
+        }
+      },
+      "id": "trigger-schedule",
+      "name": "Schedule Trigger (Weekdays 8AM)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [220, 260],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{$json.GOOGLE_SHEET_ID || 'YOUR_GOOGLE_SHEET_ID_HERE'}}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Content Briefs"
+        },
+        "options": {
+          "range": "A:F"
+        }
+      },
+      "id": "node-read-briefs",
+      "name": "Read Content Briefs",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [480, 360],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Initialize loop counter and prepare the content brief for the Creator\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const brief = item.json;\n  results.push({\n    json: {\n      content_type: brief.content_type || 'linkedin_post',\n      topic: brief.topic || '',\n      story_reference: brief.story_reference || '',\n      copywriter_dna: brief.copywriter_dna || 'Alex Hormozi',\n      platform: brief.platform || 'LinkedIn',\n      character_limit: brief.character_limit || 3000,\n      revision_count: 0,\n      max_revisions: 3,\n      critic_feedback: '',\n      pipeline_id: `batch-${new Date().toISOString().slice(0,10)}-${Math.random().toString(36).substr(2, 6)}`\n    }\n  });\n}\n\nreturn results;"
+      },
+      "id": "node-prepare-brief",
+      "name": "Prepare Brief & Init Loop",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 360]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{$credentials.anthropicApi.apiKey}}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-20250514\",\n  \"max_tokens\": 4096,\n  \"system\": \"You are the Creator agent in The Genius Tap content pipeline. Your job is to produce draft content that sounds like the client wrote it, using real stories from their story bank and structural patterns from the copywriter swipe file.\\n\\nYou do not write generic content. You do not make things up. Every sentence traces back to something the client actually said, did, experienced, or believes.\\n\\n--- CLIENT VOICE PROFILE ---\\n{{$json.voice_profile || 'PASTE YOUR CLIENT VOICE PROFILE HERE. Include: vocabulary tier, sentence patterns, humor style, signature phrases, phrases to avoid.'}}\\n\\n--- STORY BANK ---\\n{{$json.story_bank || 'PASTE YOUR CLIENT STORY BANK HERE. Include story IDs, raw material, quotable moments, lessons.'}}\\n\\n--- CONTENT RULES ---\\n- LinkedIn Posts: 1200-2800 characters, hook in first 2 lines before the fold, single-line paragraphs, 3-5 hashtags at bottom\\n- Articles: 800-1500 words, H2 subheads every 200-300 words, bold key phrases, at least 2 stories\\n- Newsletters: 500-900 words, subject under 50 chars, preview text 40-90 chars, single CTA\\n- Email: 200-500 words per email, subject under 45 chars, plain text, single CTA\\n- Social Captions: Within platform character limit, hook in first line, one idea per caption\\n\\n--- OUTPUT FORMAT ---\\nReturn a YAML header followed by the content body. Include: pipeline_id, content_type, revision_number, stories_used, dna_styles, structural_pattern, word_count, character_count.\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Create a {{$json.content_type}} about: {{$json.topic}}\\n\\nStories to use: {{$json.story_reference}}\\nCopywriter DNA style: {{$json.copywriter_dna}}\\nPlatform: {{$json.platform}}\\nCharacter limit: {{$json.character_limit}}\\nPipeline ID: {{$json.pipeline_id}}\\n\\n{{$json.revision_count > 0 ? 'REVISION CYCLE ' + $json.revision_count + '. Address this feedback from the Critic:\\n' + $json.critic_feedback : 'This is the first draft. No prior feedback.'}}\"\n    }\n  ]\n}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "node-creator-agent",
+      "name": "Creator Agent (Claude API)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [940, 360],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YOUR_ANTHROPIC_CREDENTIAL_ID",
+          "name": "Anthropic API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract the Creator's content from the Claude API response\nconst response = $input.first().json;\nconst creatorContent = response.content?.[0]?.text || '';\n\n// Pass through the brief metadata alongside the generated content\nconst brief = $('Prepare Brief & Init Loop').first().json;\n// On revision cycles, pull from the loop merge node instead\nconst loopData = $('Merge: Revision Loop').first?.()?.json;\nconst sourceData = loopData || brief;\n\nreturn [{\n  json: {\n    creator_output: creatorContent,\n    content_type: sourceData.content_type,\n    topic: sourceData.topic,\n    story_reference: sourceData.story_reference,\n    copywriter_dna: sourceData.copywriter_dna,\n    platform: sourceData.platform,\n    character_limit: sourceData.character_limit,\n    revision_count: sourceData.revision_count || 0,\n    max_revisions: sourceData.max_revisions || 3,\n    pipeline_id: sourceData.pipeline_id\n  }\n}];"
+      },
+      "id": "node-extract-creator",
+      "name": "Extract Creator Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1160, 360]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{$credentials.anthropicApi.apiKey}}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-20250514\",\n  \"max_tokens\": 4096,\n  \"system\": \"You are the Critic agent in The Genius Tap content pipeline. You evaluate content against 10 quality criteria, assign a score (0-100), detect AI slop, verify voice match, and provide specific actionable feedback.\\n\\nYou are precise, not cruel. Every score must be justified. Every feedback item must tell the Creator exactly what is wrong and exactly how to fix it.\\n\\n--- 10 QUALITY CRITERIA (each scored 1-10, total = sum) ---\\n1. Story Anchor: Real story from story bank with specific details?\\n2. Voice Match: Sounds like the client wrote it?\\n3. AI-Slop Free: No banned phrases, no robotic patterns?\\n4. Specific Detail: Concrete numbers, names, timeframes?\\n5. DNA Structure: Follows the assigned copywriter DNA pattern?\\n6. Platform Format: Meets platform-specific requirements?\\n7. Single Core Idea: One clear takeaway, not trying to do too much?\\n8. Human Test: Would a stranger think a human wrote this?\\n9. CTA Clarity: Clear, single call-to-action that fits?\\n10. No Contradictions: Consistent with client positions?\\n\\n--- BANNED PHRASES (instant flag) ---\\nIn today's fast-paced world, In today's competitive landscape, It's no secret that, At the end of the day, Let's dive in, Let's dive deep, Let's unpack, Without further ado, In this article we'll explore, Are you struggling with, Imagine a world where, It goes without saying, First and foremost, Last but not least, Game-changer, Navigate the complexities, Unlock the power of, Take it to the next level, Revolutionize your, Here's the thing, The reality is, Let me be clear, That being said, Moving forward, At its core, The bottom line is, When it comes to, In the realm of, A testament to, Read that again, I'll say it louder for the people in the back\\n\\n--- CLIENT VOICE PROFILE ---\\n{{$json.voice_profile || 'PASTE YOUR CLIENT VOICE PROFILE HERE'}}\\n\\n--- STORY BANK ---\\n{{$json.story_bank || 'PASTE YOUR CLIENT STORY BANK HERE'}}\\n\\n--- OUTPUT FORMAT ---\\nReturn valid JSON with this structure:\\n{\\n  \\\"score\\\": <number 0-100>,\\n  \\\"pass\\\": <boolean>,\\n  \\\"scores_by_criterion\\\": { \\\"story_anchor\\\": N, \\\"voice_match\\\": N, \\\"ai_slop_free\\\": N, \\\"specific_detail\\\": N, \\\"dna_structure\\\": N, \\\"platform_format\\\": N, \\\"single_core_idea\\\": N, \\\"human_test\\\": N, \\\"cta_clarity\\\": N, \\\"no_contradictions\\\": N },\\n  \\\"strengths\\\": [\\\"...\\\"],\\n  \\\"feedback\\\": [ { \\\"criterion\\\": \\\"...\\\", \\\"score\\\": N, \\\"issue\\\": \\\"...\\\", \\\"fix\\\": \\\"...\\\", \\\"location\\\": \\\"...\\\" } ],\\n  \\\"revision_instructions\\\": \\\"...\\\"\\n}\\n\\nReturn ONLY the JSON. No markdown code fences.\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Evaluate this {{$json.content_type}} content.\\n\\nAssigned DNA style: {{$json.copywriter_dna}}\\nPlatform: {{$json.platform}}\\nCharacter limit: {{$json.character_limit}}\\nRevision number: {{$json.revision_count}}\\n\\n--- CONTENT TO EVALUATE ---\\n{{$json.creator_output}}\"\n    }\n  ]\n}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "node-critic-agent",
+      "name": "Critic Agent (Claude API)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1380, 360],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YOUR_ANTHROPIC_CREDENTIAL_ID",
+          "name": "Anthropic API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse the Critic's response and extract score + feedback\nconst response = $input.first().json;\nconst criticRaw = response.content?.[0]?.text || '{}';\n\nlet criticData;\ntry {\n  // Try to parse as JSON directly\n  criticData = JSON.parse(criticRaw);\n} catch (e) {\n  // If JSON parsing fails, try to extract JSON from the response\n  const jsonMatch = criticRaw.match(/\\{[\\s\\S]*\\}/);\n  if (jsonMatch) {\n    try {\n      criticData = JSON.parse(jsonMatch[0]);\n    } catch (e2) {\n      criticData = { score: 0, pass: false, feedback: [{ issue: 'Failed to parse Critic response', fix: 'Check API response format' }], revision_instructions: 'Critic response could not be parsed. Manual review required.' };\n    }\n  } else {\n    criticData = { score: 0, pass: false, feedback: [{ issue: 'No JSON found in Critic response', fix: 'Check Critic prompt' }], revision_instructions: 'No valid response from Critic.' };\n  }\n}\n\nconst prevData = $('Extract Creator Output').first().json;\n\nreturn [{\n  json: {\n    ...prevData,\n    critic_score: criticData.score || 0,\n    critic_pass: criticData.pass || false,\n    critic_scores_by_criterion: criticData.scores_by_criterion || {},\n    critic_strengths: criticData.strengths || [],\n    critic_feedback: JSON.stringify(criticData.feedback || [], null, 2),\n    critic_revision_instructions: criticData.revision_instructions || '',\n    critic_raw: criticRaw\n  }\n}];"
+      },
+      "id": "node-parse-critic",
+      "name": "Parse Critic Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1600, 360]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "quality-gate-score",
+              "leftValue": "={{$json.critic_score}}",
+              "rightValue": 75,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-quality-gate",
+      "name": "Quality Gate (Score >= 75?)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1820, 360]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "revision-limit-check",
+              "leftValue": "={{$json.revision_count}}",
+              "rightValue": "={{$json.max_revisions}}",
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-revision-check",
+      "name": "Revisions Left? (< 3)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [2060, 560]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Increment revision count and prepare data for the Creator loop\nconst data = $input.first().json;\n\nreturn [{\n  json: {\n    content_type: data.content_type,\n    topic: data.topic,\n    story_reference: data.story_reference,\n    copywriter_dna: data.copywriter_dna,\n    platform: data.platform,\n    character_limit: data.character_limit,\n    revision_count: (data.revision_count || 0) + 1,\n    max_revisions: data.max_revisions || 3,\n    pipeline_id: data.pipeline_id,\n    critic_feedback: `CRITIC SCORE: ${data.critic_score}/100\\n\\nSCORES BY CRITERION:\\n${JSON.stringify(data.critic_scores_by_criterion, null, 2)}\\n\\nFEEDBACK ITEMS:\\n${data.critic_feedback}\\n\\nREVISION INSTRUCTIONS:\\n${data.critic_revision_instructions}`\n  }\n}];"
+      },
+      "id": "node-prep-revision",
+      "name": "Prepare Revision Brief",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2300, 480]
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "output": "empty"
+      },
+      "id": "node-merge-loop",
+      "name": "Merge: Revision Loop",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [940, 480]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{$credentials.anthropicApi.apiKey}}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-20250514\",\n  \"max_tokens\": 4096,\n  \"system\": \"You are the Approver agent in The Genius Tap content pipeline. You are the last line of defense before content goes live under a client's name. Content reaching you has already passed the Critic (scored 75+).\\n\\nYou think like a managing editor. You run 8 final QA checks:\\n\\n1. Cross-Piece Coherence: Does this fit alongside other batch content?\\n2. Story Accuracy: Do story details match the story bank exactly?\\n3. Platform Compliance: All technical formatting requirements met?\\n4. Brand Safety: Could this create reputation or legal problems?\\n5. The Pride Test: Would you be proud to publish this under the client's name?\\n6. Originality Within Batch: Sufficiently different from other batch pieces?\\n7. Publishing Readiness: No placeholders, metadata leaks, or formatting errors?\\n8. Cadence Fit: Appropriate for the publishing schedule slot?\\n\\n--- CLIENT VOICE PROFILE ---\\n{{$json.voice_profile || 'PASTE YOUR CLIENT VOICE PROFILE HERE'}}\\n\\n--- OUTPUT FORMAT ---\\nReturn valid JSON with this structure:\\n{\\n  \\\"approver_score\\\": <number 0-100>,\\n  \\\"decision\\\": \\\"approved\\\" | \\\"conditional_approval\\\" | \\\"flagged_for_human_review\\\" | \\\"rejected\\\",\\n  \\\"checks_passed\\\": \\\"N/8\\\",\\n  \\\"pride_test\\\": \\\"pass\\\" | \\\"fail\\\",\\n  \\\"notes\\\": \\\"...\\\",\\n  \\\"checks_detail\\\": [\\n    { \\\"check\\\": \\\"...\\\", \\\"result\\\": \\\"pass\\\" | \\\"fail\\\", \\\"notes\\\": \\\"...\\\" }\\n  ],\\n  \\\"final_content\\\": \\\"<the approved content, cleaned of metadata headers, ready to publish>\\\"\\n}\\n\\nReturn ONLY the JSON. No markdown code fences.\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Final QA review for this {{$json.content_type}}.\\n\\nCritic Score: {{$json.critic_score}}/100\\nCritic Scores by Criterion: {{JSON.stringify($json.critic_scores_by_criterion)}}\\nRevision cycles: {{$json.revision_count}}\\nPipeline ID: {{$json.pipeline_id}}\\n\\n--- CONTENT ---\\n{{$json.creator_output}}\"\n    }\n  ]\n}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "node-approver-agent",
+      "name": "Approver Agent (Claude API)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2060, 180],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YOUR_ANTHROPIC_CREDENTIAL_ID",
+          "name": "Anthropic API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse the Approver's response and prepare final output\nconst response = $input.first().json;\nconst approverRaw = response.content?.[0]?.text || '{}';\n\nlet approverData;\ntry {\n  approverData = JSON.parse(approverRaw);\n} catch (e) {\n  const jsonMatch = approverRaw.match(/\\{[\\s\\S]*\\}/);\n  if (jsonMatch) {\n    try {\n      approverData = JSON.parse(jsonMatch[0]);\n    } catch (e2) {\n      approverData = { approver_score: 0, decision: 'flagged_for_human_review', notes: 'Failed to parse Approver response' };\n    }\n  } else {\n    approverData = { approver_score: 0, decision: 'flagged_for_human_review', notes: 'No valid response from Approver' };\n  }\n}\n\nconst prevData = $('Quality Gate (Score >= 75?)').first().json;\n\nreturn [{\n  json: {\n    pipeline_id: prevData.pipeline_id,\n    content_type: prevData.content_type,\n    topic: prevData.topic,\n    platform: prevData.platform,\n    copywriter_dna: prevData.copywriter_dna,\n    revision_cycles: prevData.revision_count,\n    critic_score: prevData.critic_score,\n    approver_score: approverData.approver_score || 0,\n    decision: approverData.decision || 'flagged_for_human_review',\n    checks_passed: approverData.checks_passed || '0/8',\n    pride_test: approverData.pride_test || 'unknown',\n    approver_notes: approverData.notes || '',\n    checks_detail: approverData.checks_detail || [],\n    final_content: approverData.final_content || prevData.creator_output,\n    approved_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "node-parse-approver",
+      "name": "Parse Approver Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2300, 180]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://docs.googleapis.com/v1/documents",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": \"{{$json.content_type}} - {{$json.topic}} - {{$json.pipeline_id}}\"\n}",
+        "options": {}
+      },
+      "id": "node-create-google-doc",
+      "name": "Create Google Doc",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2540, 60],
+      "disabled": true,
+      "notesInFlow": true,
+      "notes": "Enable this node and configure Google OAuth2 credentials to write approved content to Google Docs. Alternative: use the Slack output node below."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$json.SLACK_WEBHOOK_URL || 'YOUR_SLACK_WEBHOOK_URL_HERE'}}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"blocks\": [\n    {\n      \"type\": \"header\",\n      \"text\": {\n        \"type\": \"plain_text\",\n        \"text\": \"Content Approved: {{$json.content_type}}\"\n      }\n    },\n    {\n      \"type\": \"section\",\n      \"fields\": [\n        { \"type\": \"mrkdwn\", \"text\": \"*Pipeline ID:*\\n{{$json.pipeline_id}}\" },\n        { \"type\": \"mrkdwn\", \"text\": \"*Decision:*\\n{{$json.decision}}\" },\n        { \"type\": \"mrkdwn\", \"text\": \"*Critic Score:*\\n{{$json.critic_score}}/100\" },\n        { \"type\": \"mrkdwn\", \"text\": \"*Approver Score:*\\n{{$json.approver_score}}/100\" },\n        { \"type\": \"mrkdwn\", \"text\": \"*Platform:*\\n{{$json.platform}}\" },\n        { \"type\": \"mrkdwn\", \"text\": \"*Revisions:*\\n{{$json.revision_cycles}}\" }\n      ]\n    },\n    {\n      \"type\": \"section\",\n      \"text\": {\n        \"type\": \"mrkdwn\",\n        \"text\": \"*Approver Notes:*\\n{{$json.approver_notes}}\"\n      }\n    },\n    {\n      \"type\": \"divider\"\n    },\n    {\n      \"type\": \"section\",\n      \"text\": {\n        \"type\": \"mrkdwn\",\n        \"text\": \"*Content:*\\n```{{$json.final_content.substring(0, 2900)}}```\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "node-slack-output",
+      "name": "Send to Slack (Content Review)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2540, 240]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$json.SLACK_NOTIFICATION_WEBHOOK || 'YOUR_SLACK_NOTIFICATION_WEBHOOK_HERE'}}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": \"The Genius Tap Pipeline Complete\\n\\nPipeline ID: {{$json.pipeline_id}}\\nContent Type: {{$json.content_type}}\\nTopic: {{$json.topic}}\\nDNA Style: {{$json.copywriter_dna}}\\nPlatform: {{$json.platform}}\\n\\nCritic Score: {{$json.critic_score}}/100\\nApprover Score: {{$json.approver_score}}/100\\nDecision: {{$json.decision}}\\nPride Test: {{$json.pride_test}}\\nChecks Passed: {{$json.checks_passed}}\\nRevision Cycles: {{$json.revision_cycles}}\\n\\nApprover Notes: {{$json.approver_notes}}\"\n}",
+        "options": {}
+      },
+      "id": "node-notification",
+      "name": "Notification (Slack/Email)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2780, 240]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Handle the case where max revisions are exhausted\nconst data = $input.first().json;\n\nreturn [{\n  json: {\n    pipeline_id: data.pipeline_id,\n    content_type: data.content_type,\n    topic: data.topic,\n    platform: data.platform,\n    copywriter_dna: data.copywriter_dna,\n    revision_cycles: data.revision_count,\n    critic_score: data.critic_score,\n    approver_score: 0,\n    decision: 'escalated_to_human',\n    checks_passed: 'N/A',\n    pride_test: 'N/A',\n    approver_notes: `ESCALATED: Content failed to reach quality threshold (score: ${data.critic_score}/100) after ${data.revision_count} revision cycles. Requires human intervention. Last Critic feedback: ${data.critic_revision_instructions}`,\n    checks_detail: [],\n    final_content: data.creator_output,\n    approved_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "node-escalation",
+      "name": "Escalate to Human Review",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2300, 680]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$json.SLACK_NOTIFICATION_WEBHOOK || 'YOUR_SLACK_NOTIFICATION_WEBHOOK_HERE'}}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": \"ESCALATION REQUIRED - The Genius Tap Pipeline\\n\\nPipeline ID: {{$json.pipeline_id}}\\nContent Type: {{$json.content_type}}\\nTopic: {{$json.topic}}\\n\\nFinal Critic Score: {{$json.critic_score}}/100\\nRevision Cycles: {{$json.revision_cycles}} (max reached)\\n\\nReason: {{$json.approver_notes}}\\n\\nAction Required: Manual review and revision needed.\"\n}",
+        "options": {}
+      },
+      "id": "node-escalation-notify",
+      "name": "Escalation Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2540, 680]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Read Content Briefs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger (Weekdays 8AM)": {
+      "main": [
+        [
+          {
+            "node": "Read Content Briefs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Content Briefs": {
+      "main": [
+        [
+          {
+            "node": "Prepare Brief & Init Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Brief & Init Loop": {
+      "main": [
+        [
+          {
+            "node": "Creator Agent (Claude API)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creator Agent (Claude API)": {
+      "main": [
+        [
+          {
+            "node": "Extract Creator Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Creator Output": {
+      "main": [
+        [
+          {
+            "node": "Critic Agent (Claude API)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Critic Agent (Claude API)": {
+      "main": [
+        [
+          {
+            "node": "Parse Critic Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Critic Response": {
+      "main": [
+        [
+          {
+            "node": "Quality Gate (Score >= 75?)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quality Gate (Score >= 75?)": {
+      "main": [
+        [
+          {
+            "node": "Approver Agent (Claude API)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Revisions Left? (< 3)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Revisions Left? (< 3)": {
+      "main": [
+        [
+          {
+            "node": "Prepare Revision Brief",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Escalate to Human Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Revision Brief": {
+      "main": [
+        [
+          {
+            "node": "Merge: Revision Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge: Revision Loop": {
+      "main": [
+        [
+          {
+            "node": "Creator Agent (Claude API)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approver Agent (Claude API)": {
+      "main": [
+        [
+          {
+            "node": "Parse Approver Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Approver Response": {
+      "main": [
+        [
+          {
+            "node": "Send to Slack (Content Review)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to Slack (Content Review)": {
+      "main": [
+        [
+          {
+            "node": "Notification (Slack/Email)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Escalate to Human Review": {
+      "main": [
+        [
+          {
+            "node": "Escalation Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "content-pipeline",
+      "id": "tag-content-pipeline"
+    },
+    {
+      "name": "genius-tap",
+      "id": "tag-genius-tap"
+    }
+  ],
+  "pinData": {},
+  "versionId": "1.0.0",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "genius-tap-content-pipeline-v1"
+  }
+}

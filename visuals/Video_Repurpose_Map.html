@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genius Tap Content Repurposing Map</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0a1628;--bg2:#0d1f3c;--bg3:#122a4e;
+    --gold:#d4a843;--gold-light:#e8c96a;--gold-dark:#b8912e;
+    --text:#e8e6e3;--text-dim:#8899aa;--text-bright:#ffffff;
+    --line:#1e3a5f;
+    --linkedin:#0a66c2;--email:#e8553d;--social:#8b5cf6;
+    --longform:#10b981;--video:#f59e0b;--sales:#ec4899;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;
+    min-height:100vh;
+  }
+
+  /* ── HERO ── */
+  .hero{
+    text-align:center;padding:60px 24px 40px;
+    background:linear-gradient(180deg,#060e1d 0%,var(--bg) 100%);
+    position:relative;overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);
+    width:500px;height:500px;border-radius:50%;
+    background:radial-gradient(circle,rgba(212,168,67,.08) 0%,transparent 70%);
+    pointer-events:none;
+  }
+  .logo{
+    font-size:13px;letter-spacing:6px;text-transform:uppercase;
+    color:var(--gold);margin-bottom:14px;font-weight:600;
+    opacity:0;animation:fadeUp .8s .2s forwards;
+  }
+  .hero h1{
+    font-size:clamp(1.8rem,4.5vw,3.2rem);font-weight:700;
+    color:var(--text-bright);margin-bottom:10px;
+    opacity:0;animation:fadeUp .8s .4s forwards;
+  }
+  .hero h1 span{color:var(--gold)}
+  .tagline{
+    font-size:clamp(.95rem,2vw,1.2rem);color:var(--text-dim);
+    font-style:italic;
+    opacity:0;animation:fadeUp .8s .6s forwards;
+  }
+
+  /* ── TOTAL COUNTER ── */
+  .total-bar{
+    text-align:center;padding:30px 24px 10px;
+    opacity:0;animation:fadeUp .8s .8s forwards;
+  }
+  .total-bar .number{
+    font-size:clamp(3rem,8vw,5rem);font-weight:800;
+    background:linear-gradient(135deg,var(--gold-dark),var(--gold-light));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;line-height:1.1;
+  }
+  .total-bar .label{font-size:1.1rem;color:var(--text-dim);margin-top:4px}
+
+  /* ── CENTER NODE ── */
+  .center-section{
+    display:flex;justify-content:center;padding:30px 24px 20px;
+    opacity:0;animation:fadeUp .8s 1s forwards;
+  }
+  .center-node{
+    width:240px;height:240px;border-radius:50%;
+    background:radial-gradient(circle at 40% 40%,rgba(212,168,67,.2),rgba(212,168,67,.05));
+    border:2px solid var(--gold);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;position:relative;
+    box-shadow:0 0 60px rgba(212,168,67,.15),inset 0 0 40px rgba(212,168,67,.05);
+    animation:centerPulse 4s infinite;
+  }
+  .center-node svg{width:36px;height:36px;fill:none;stroke:var(--gold);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-bottom:8px}
+  .center-node .cn-label{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .center-node .cn-title{font-size:1.1rem;color:var(--text-bright);font-weight:700;margin-top:4px}
+  .center-node .cn-time{font-size:.85rem;color:var(--text-dim);margin-top:2px}
+  @keyframes centerPulse{
+    0%,100%{box-shadow:0 0 60px rgba(212,168,67,.15),inset 0 0 40px rgba(212,168,67,.05)}
+    50%{box-shadow:0 0 80px rgba(212,168,67,.25),inset 0 0 50px rgba(212,168,67,.08)}
+  }
+
+  /* ── BRANCHES GRID ── */
+  .branches{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:24px;max-width:1100px;margin:20px auto 0;padding:0 24px 60px;
+  }
+
+  .branch{
+    background:linear-gradient(135deg,var(--bg2),var(--bg3));
+    border:1px solid var(--line);border-radius:16px;
+    overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s;
+    opacity:0;animation:fadeUp .6s forwards;
+    cursor:default;
+  }
+  .branch:nth-child(1){animation-delay:1.2s}
+  .branch:nth-child(2){animation-delay:1.35s}
+  .branch:nth-child(3){animation-delay:1.5s}
+  .branch:nth-child(4){animation-delay:1.65s}
+  .branch:nth-child(5){animation-delay:1.8s}
+  .branch:nth-child(6){animation-delay:1.95s}
+
+  .branch:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 40px rgba(0,0,0,.3);
+  }
+
+  .branch-header{
+    padding:20px 24px 16px;display:flex;align-items:center;gap:14px;
+    position:relative;
+  }
+  .branch-header::after{
+    content:'';position:absolute;bottom:0;left:24px;right:24px;
+    height:1px;background:var(--line);
+  }
+  .branch-icon{
+    width:48px;height:48px;border-radius:12px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .branch-icon svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+  .branch-meta h3{font-size:1.05rem;color:var(--text-bright);line-height:1.3}
+  .branch-meta .count{
+    font-size:.82rem;font-weight:700;
+    margin-top:2px;
+  }
+
+  .branch-body{padding:16px 24px 20px}
+  .branch-item{
+    display:flex;align-items:baseline;gap:10px;
+    padding:6px 0;border-bottom:1px solid rgba(30,58,95,.5);
+    font-size:.88rem;color:var(--text-dim);
+  }
+  .branch-item:last-child{border-bottom:none}
+  .branch-item .qty{
+    font-weight:700;font-size:.82rem;min-width:22px;text-align:right;
+    flex-shrink:0;
+  }
+
+  /* branch color accents */
+  .branch--linkedin{border-top:3px solid var(--linkedin)}
+  .branch--linkedin:hover{border-color:var(--linkedin)}
+  .branch--linkedin .branch-icon{background:rgba(10,102,194,.2)}
+  .branch--linkedin .count,.branch--linkedin .qty{color:var(--linkedin)}
+
+  .branch--email{border-top:3px solid var(--email)}
+  .branch--email:hover{border-color:var(--email)}
+  .branch--email .branch-icon{background:rgba(232,85,61,.2)}
+  .branch--email .count,.branch--email .qty{color:var(--email)}
+
+  .branch--social{border-top:3px solid var(--social)}
+  .branch--social:hover{border-color:var(--social)}
+  .branch--social .branch-icon{background:rgba(139,92,246,.2)}
+  .branch--social .count,.branch--social .qty{color:var(--social)}
+
+  .branch--longform{border-top:3px solid var(--longform)}
+  .branch--longform:hover{border-color:var(--longform)}
+  .branch--longform .branch-icon{background:rgba(16,185,129,.2)}
+  .branch--longform .count,.branch--longform .qty{color:var(--longform)}
+
+  .branch--video{border-top:3px solid var(--video)}
+  .branch--video:hover{border-color:var(--video)}
+  .branch--video .branch-icon{background:rgba(245,158,11,.2)}
+  .branch--video .count,.branch--video .qty{color:var(--video)}
+
+  .branch--sales{border-top:3px solid var(--sales)}
+  .branch--sales:hover{border-color:var(--sales)}
+  .branch--sales .branch-icon{background:rgba(236,72,153,.2)}
+  .branch--sales .count,.branch--sales .qty{color:var(--sales)}
+
+  /* ── CONNECTING LINES (decorative) ── */
+  .connectors{
+    display:flex;justify-content:center;padding:0 24px 10px;
+    opacity:0;animation:fadeUp .6s 1.1s forwards;
+  }
+  .connector-line{
+    width:2px;height:40px;
+    background:linear-gradient(180deg,var(--gold),transparent);
+    margin:0 auto;
+  }
+
+  /* ── SUMMARY BAR ── */
+  .summary{
+    max-width:900px;margin:0 auto;padding:0 24px 60px;
+    opacity:0;animation:fadeUp .8s 2.2s forwards;
+  }
+  .summary-card{
+    background:linear-gradient(135deg,rgba(212,168,67,.08),rgba(212,168,67,.03));
+    border:1px solid rgba(212,168,67,.25);border-radius:16px;
+    padding:32px;text-align:center;
+  }
+  .summary-card h3{
+    font-size:1.3rem;color:var(--text-bright);margin-bottom:16px;
+  }
+  .summary-stats{
+    display:flex;flex-wrap:wrap;justify-content:center;gap:24px;
+  }
+  .stat{text-align:center}
+  .stat .stat-num{
+    font-size:2rem;font-weight:800;
+    background:linear-gradient(135deg,var(--gold-dark),var(--gold-light));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;
+  }
+  .stat .stat-label{font-size:.78rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
+  /* ── FOOTER ── */
+  footer{
+    text-align:center;padding:40px 24px;
+    border-top:1px solid var(--line);color:var(--text-dim);font-size:.85rem;
+  }
+  footer .brand{color:var(--gold);font-weight:600;letter-spacing:2px;font-size:.9rem}
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+
+  /* ── HOVER EXPAND for branch items ── */
+  .branch-body{
+    max-height:0;overflow:hidden;
+    transition:max-height .4s ease,padding .4s ease;
+    padding:0 24px;
+  }
+  .branch.open .branch-body{
+    max-height:400px;padding:16px 24px 20px;
+  }
+  .branch-header{cursor:pointer}
+  .branch-header .toggle-icon{
+    margin-left:auto;font-size:1.2rem;color:var(--text-dim);
+    transition:transform .3s;flex-shrink:0;
+  }
+  .branch.open .toggle-icon{transform:rotate(180deg)}
+
+  /* Start all open on desktop */
+  @media(min-width:769px){
+    .branch-body{max-height:400px;padding:16px 24px 20px}
+    .toggle-icon{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="logo">Genius Tap</div>
+  <h1>1 Call &rarr; <span>52+ Content Pieces</span></h1>
+  <p class="tagline">One Conversation. A Lifetime of Content.</p>
+</section>
+
+<!-- ══════════ TOTAL COUNTER ══════════ -->
+<div class="total-bar">
+  <div class="number" id="counter">0</div>
+  <div class="label">Content Pieces from a Single 90-Minute Call</div>
+</div>
+
+<!-- ══════════ CENTER NODE ══════════ -->
+<div class="center-section">
+  <div class="center-node">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+    <div class="cn-label">Source</div>
+    <div class="cn-title">1 Genius Tap Call</div>
+    <div class="cn-time">90 Minutes</div>
+  </div>
+</div>
+
+<div class="connectors"><div class="connector-line"></div></div>
+
+<!-- ══════════ BRANCHES ══════════ -->
+<div class="branches">
+
+  <!-- LINKEDIN -->
+  <div class="branch branch--linkedin open">
+    <div class="branch-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="branch-icon">
+        <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </div>
+      <div class="branch-meta">
+        <h3>LinkedIn</h3>
+        <div class="count">15 pieces</div>
+      </div>
+      <span class="toggle-icon">&#9660;</span>
+    </div>
+    <div class="branch-body">
+      <div class="branch-item"><span class="qty">10</span> LinkedIn posts (2/day for 5 days from signature stories)</div>
+      <div class="branch-item"><span class="qty">3</span> LinkedIn articles (weekly deep dives)</div>
+      <div class="branch-item"><span class="qty">2</span> LinkedIn newsletters</div>
+    </div>
+  </div>
+
+  <!-- EMAIL -->
+  <div class="branch branch--email open">
+    <div class="branch-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="branch-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22 4 12 13 2 4"/></svg>
+      </div>
+      <div class="branch-meta">
+        <h3>Email</h3>
+        <div class="count">12 pieces</div>
+      </div>
+      <span class="toggle-icon">&#9660;</span>
+    </div>
+    <div class="branch-body">
+      <div class="branch-item"><span class="qty">5</span> Email nurture sequence</div>
+      <div class="branch-item"><span class="qty">7</span> Email autoresponder cycle</div>
+    </div>
+  </div>
+
+  <!-- SOCIAL -->
+  <div class="branch branch--social open">
+    <div class="branch-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="branch-icon">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </div>
+      <div class="branch-meta">
+        <h3>Social Media</h3>
+        <div class="count">8 pieces</div>
+      </div>
+      <span class="toggle-icon">&#9660;</span>
+    </div>
+    <div class="branch-body">
+      <div class="branch-item"><span class="qty">3</span> Twitter/X threads</div>
+      <div class="branch-item"><span class="qty">3</span> Instagram captions</div>
+      <div class="branch-item"><span class="qty">2</span> TikTok/Reels scripts</div>
+    </div>
+  </div>
+
+  <!-- LONG-FORM -->
+  <div class="branch branch--longform open">
+    <div class="branch-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="branch-icon">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div class="branch-meta">
+        <h3>Long-Form</h3>
+        <div class="count">5 pieces</div>
+      </div>
+      <span class="toggle-icon">&#9660;</span>
+    </div>
+    <div class="branch-body">
+      <div class="branch-item"><span class="qty">2</span> Blog articles</div>
+      <div class="branch-item"><span class="qty">1</span> Case study</div>
+      <div class="branch-item"><span class="qty">1</span> Lead magnet section</div>
+      <div class="branch-item"><span class="qty">1</span> Newsletter edition</div>
+    </div>
+  </div>
+
+  <!-- VIDEO -->
+  <div class="branch branch--video open">
+    <div class="branch-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="branch-icon">
+        <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      </div>
+      <div class="branch-meta">
+        <h3>Video</h3>
+        <div class="count">5 pieces</div>
+      </div>
+      <span class="toggle-icon">&#9660;</span>
+    </div>
+    <div class="branch-body">
+      <div class="branch-item"><span class="qty">3</span> YouTube Shorts / Reels (story clips)</div>
+      <div class="branch-item"><span class="qty">1</span> YouTube video (full interview highlights)</div>
+      <div class="branch-item"><span class="qty">1</span> Audiogram clip</div>
+    </div>
+  </div>
+
+  <!-- SALES -->
+  <div class="branch branch--sales open">
+    <div class="branch-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="branch-icon">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div class="branch-meta">
+        <h3>Sales Assets</h3>
+        <div class="count">7 pieces</div>
+      </div>
+      <span class="toggle-icon">&#9660;</span>
+    </div>
+    <div class="branch-body">
+      <div class="branch-item"><span class="qty">3</span> Cold email angles</div>
+      <div class="branch-item"><span class="qty">2</span> Landing page sections</div>
+      <div class="branch-item"><span class="qty">1</span> Sales page testimonial block</div>
+      <div class="branch-item"><span class="qty">1</span> Discovery call pre-work email</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════ SUMMARY ══════════ -->
+<div class="summary">
+  <div class="summary-card">
+    <h3>From One 90-Minute Conversation</h3>
+    <div class="summary-stats">
+      <div class="stat"><div class="stat-num">6</div><div class="stat-label">Channels</div></div>
+      <div class="stat"><div class="stat-num">52+</div><div class="stat-label">Content Pieces</div></div>
+      <div class="stat"><div class="stat-num">90</div><div class="stat-label">Minutes Invested</div></div>
+      <div class="stat"><div class="stat-num">30+</div><div class="stat-label">Days of Content</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="brand">GENIUS TAP</div>
+  <p style="margin-top:8px">One Conversation. A Lifetime of Content.</p>
+  <p style="margin-top:4px;font-size:.78rem;color:#556677">&copy; 2026 Genius Tap Content System. All rights reserved.</p>
+</footer>
+
+<!-- ══════════ COUNTER ANIMATION ══════════ -->
+<script>
+(function(){
+  const target=52;
+  const el=document.getElementById('counter');
+  let current=0;
+  const duration=2000;
+  const startTime=performance.now();
+  function easeOut(t){return 1-Math.pow(1-t,3)}
+  function tick(now){
+    const elapsed=now-startTime;
+    const progress=Math.min(elapsed/duration,1);
+    current=Math.round(easeOut(progress)*target);
+    el.textContent=current+'+';
+    if(progress<1) requestAnimationFrame(tick);
+  }
+  // Start counter when visible
+  const observer=new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting){
+      requestAnimationFrame(tick);
+      observer.disconnect();
+    }
+  },{threshold:0.5});
+  observer.observe(el);
+})();
+</script>
+
+</body>
+</html>

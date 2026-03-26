@@ -1,317 +1,166 @@
-[
-  {
-    "name": "Jon Buchan",
-    "email_count": 2274,
-    "primary_style": "playful-pattern-interrupt",
-    "signature_patterns": [
-      "humor hooks that disarm before the pitch",
-      "self-deprecating openings that build instant likability",
-      "absurd analogies that make the reader laugh and remember",
-      "fourth-wall breaks acknowledging the reader knows they are being sold to",
-      "conversational tone that reads like a text from a witty friend"
-    ],
-    "best_for": [
-      "cold emails",
-      "ice-breaker linkedin posts",
-      "connection request follow-ups",
-      "newsletter openers",
-      "reply-driven outreach"
-    ],
-    "voice_traits": {
-      "energy": "high",
-      "formality": "low",
-      "humor": "high",
-      "storytelling": "medium",
-      "contrarian": "medium"
+{
+  "authors": [
+    {
+      "key": "alex_hormozi",
+      "display_name": "Alex Hormozi",
+      "emails": ["value@acquisition.com"],
+      "domains": ["acquisition.com"],
+      "specialties": ["offers", "scaling", "value equations", "business growth"],
+      "best_for": ["offer breakdowns", "tactical value emails", "direct lessons"],
+      "style_traits": ["direct", "framework-heavy", "no-fluff", "short subject lines"]
     },
-    "content_type_fit": {
-      "cold_email": 10,
-      "linkedin_post_authority": 5,
-      "linkedin_post_story": 6,
-      "linkedin_post_tactical": 4,
-      "article": 5,
-      "newsletter": 9,
-      "social_caption": 7
-    }
-  },
-  {
-    "name": "Todd Brown",
-    "email_count": 619,
-    "primary_style": "mechanism-focused-educational",
-    "signature_patterns": [
-      "names and frames proprietary mechanisms",
-      "builds curiosity through the mechanism behind the result",
-      "educational hooks that teach while selling",
-      "here is why what you have been told is wrong structure",
-      "positions frameworks as discoveries not opinions"
-    ],
-    "best_for": [
-      "course and info-product launches",
-      "consultant authority posts",
-      "educational linkedin articles",
-      "lead magnets",
-      "webinar promotion emails"
-    ],
-    "voice_traits": {
-      "energy": "medium",
-      "formality": "medium-high",
-      "humor": "low",
-      "storytelling": "high",
-      "contrarian": "high"
+    {
+      "key": "bill_mueller",
+      "display_name": "Bill Mueller",
+      "emails": ["bill@storysalesmachine.com"],
+      "domains": ["storysalesmachine.com"],
+      "specialties": ["storytelling", "email sequences", "narrative selling", "curiosity"],
+      "best_for": ["story-led emails", "curiosity hooks", "email critiques"],
+      "style_traits": ["story-driven", "curiosity-first", "question-led", "narrative"]
     },
-    "content_type_fit": {
-      "cold_email": 5,
-      "linkedin_post_authority": 8,
-      "linkedin_post_story": 6,
-      "linkedin_post_tactical": 8,
-      "article": 9,
-      "newsletter": 6,
-      "social_caption": 4
-    }
-  },
-  {
-    "name": "Bill Mueller",
-    "email_count": 279,
-    "primary_style": "story-driven-curiosity",
-    "signature_patterns": [
-      "open loops that keep the reader scrolling",
-      "nested stories (a story within a story)",
-      "I never told anyone this but reveals that create intimacy",
-      "emotional arcs from struggle to insight with delayed reveal",
-      "specific sensory detail that paints scenes"
-    ],
-    "best_for": [
-      "personal brand storytelling",
-      "coaching and advisory content",
-      "linkedin narrative posts",
-      "newsletter main stories",
-      "long-form emotional content"
-    ],
-    "voice_traits": {
-      "energy": "medium",
-      "formality": "medium",
-      "humor": "low",
-      "storytelling": "very-high",
-      "contrarian": "low"
+    {
+      "key": "brian_kurtz",
+      "display_name": "Brian Kurtz",
+      "emails": ["brian@briankurtz.net"],
+      "domains": ["briankurtz.net"],
+      "specialties": ["direct response", "relationship building", "marketing history", "lifetime value"],
+      "best_for": ["nurture", "authority building", "industry-insider stories"],
+      "style_traits": ["relational", "insider", "story-backed", "classic direct response"]
     },
-    "content_type_fit": {
-      "cold_email": 3,
-      "linkedin_post_authority": 6,
-      "linkedin_post_story": 10,
-      "linkedin_post_tactical": 3,
-      "article": 10,
-      "newsletter": 8,
-      "social_caption": 4
-    }
-  },
-  {
-    "name": "Jay Abraham",
-    "email_count": 308,
-    "primary_style": "strategic-leverage",
-    "signature_patterns": [
-      "abundance thinking and leverage framing",
-      "most people framing that segments the audience",
-      "cross-industry pattern matching",
-      "strategic contrarianism that reframes assumptions",
-      "preeminence positioning as trusted advisor not vendor"
-    ],
-    "best_for": [
-      "high-ticket B2B content",
-      "strategic advisory posts",
-      "thought leadership articles",
-      "keynote preparation content",
-      "joint venture outreach"
-    ],
-    "voice_traits": {
-      "energy": "medium",
-      "formality": "high",
-      "humor": "low",
-      "storytelling": "medium",
-      "contrarian": "high"
+    {
+      "key": "eugene_schwartz",
+      "display_name": "Eugene Schwartz",
+      "emails": [],
+      "domains": [],
+      "specialties": ["direct response", "market sophistication", "headline architecture", "desire stages"],
+      "best_for": ["long-form sales copy", "headline ideation", "market awareness strategy"],
+      "style_traits": ["market-aware", "intensity-driven", "classic direct response", "research-heavy"]
     },
-    "content_type_fit": {
-      "cold_email": 5,
-      "linkedin_post_authority": 10,
-      "linkedin_post_story": 5,
-      "linkedin_post_tactical": 6,
-      "article": 9,
-      "newsletter": 6,
-      "social_caption": 5
-    }
-  },
-  {
-    "name": "Brian Kurtz",
-    "email_count": 422,
-    "primary_style": "insider-authority-direct-response",
-    "signature_patterns": [
-      "I learned from the legends narratives",
-      "earned name-dropping as part of the story",
-      "insider access feel and secret history hooks",
-      "heritage credibility connecting to proven lineage",
-      "direct response tradition applied to modern channels"
-    ],
-    "best_for": [
-      "newsletter content for list builders",
-      "authority-building linkedin articles",
-      "long-form direct response emails",
-      "book launch content",
-      "marketing-audience content"
-    ],
-    "voice_traits": {
-      "energy": "medium",
-      "formality": "medium-high",
-      "humor": "low",
-      "storytelling": "high",
-      "contrarian": "medium"
+    {
+      "key": "jay_abraham",
+      "display_name": "Jay Abraham",
+      "emails": ["jay@abraham.com", "jaipremium@substack.com"],
+      "domains": ["abraham.com"],
+      "specialties": ["strategy", "leverage", "growth", "partnerships"],
+      "best_for": ["long-form value", "strategic thinking", "premium positioning"],
+      "style_traits": ["strategic", "value-dense", "long-form", "you-focused"]
     },
-    "content_type_fit": {
-      "cold_email": 4,
-      "linkedin_post_authority": 8,
-      "linkedin_post_story": 7,
-      "linkedin_post_tactical": 5,
-      "article": 10,
-      "newsletter": 10,
-      "social_caption": 3
-    }
-  },
-  {
-    "name": "Alex Hormozi",
-    "email_count": 553,
-    "primary_style": "value-stacking-contrarian",
-    "signature_patterns": [
-      "brutal honesty that feels refreshing",
-      "free is better than paid positioning",
-      "value equation breakdowns with math",
-      "contrarian reframes flipping conventional advice",
-      "here is what I would do if I were you directness"
-    ],
-    "best_for": [
-      "offer-centric linkedin posts",
-      "operator and agency content",
-      "lead magnet promotion",
-      "pricing justification content",
-      "short-form punchy posts"
-    ],
-    "voice_traits": {
-      "energy": "very-high",
-      "formality": "low",
-      "humor": "low",
-      "storytelling": "medium",
-      "contrarian": "very-high"
+    {
+      "key": "jon_buchan",
+      "display_name": "Jon Buchan",
+      "emails": ["jon@charm-offensive.co.uk"],
+      "domains": ["charm-offensive.co.uk"],
+      "specialties": ["cold email", "personality-driven outreach", "humor", "pattern interrupts"],
+      "best_for": ["cold outreach", "quirky offers", "personality-rich email"],
+      "style_traits": ["playful", "quirky", "charming", "unorthodox"]
     },
-    "content_type_fit": {
-      "cold_email": 8,
-      "linkedin_post_authority": 10,
-      "linkedin_post_story": 5,
-      "linkedin_post_tactical": 8,
-      "article": 6,
-      "newsletter": 5,
-      "social_caption": 10
-    }
-  },
-  {
-    "name": "Tom Bilyeu",
-    "email_count": 431,
-    "primary_style": "mindset-aspirational",
-    "signature_patterns": [
-      "identity-level reframes about who you need to become",
-      "rock bottom to breakthrough story arcs",
-      "existential urgency without manipulation",
-      "philosophical depth in accessible language",
-      "mentor-voice that makes the reader feel coached"
-    ],
-    "best_for": [
-      "personal development content",
-      "founder journey narratives",
-      "mindset-shift posts",
-      "motivational newsletter content",
-      "community-building content"
-    ],
-    "voice_traits": {
-      "energy": "high",
-      "formality": "medium",
-      "humor": "low",
-      "storytelling": "very-high",
-      "contrarian": "medium"
+    {
+      "key": "lead_gen_jay",
+      "display_name": "Lead Gen Jay",
+      "emails": ["jay@leadgenjay.com"],
+      "domains": ["leadgenjay.com", "web.leadgenjay.com"],
+      "specialties": ["lead generation", "cold email", "B2B outbound", "growth systems"],
+      "best_for": ["lead-gen tactics", "prospecting systems", "practical frameworks"],
+      "style_traits": ["practical", "growth-focused", "tactical", "modern outbound"]
     },
-    "content_type_fit": {
-      "cold_email": 3,
-      "linkedin_post_authority": 7,
-      "linkedin_post_story": 10,
-      "linkedin_post_tactical": 3,
-      "article": 9,
-      "newsletter": 8,
-      "social_caption": 7
-    }
-  },
-  {
-    "name": "Lead Gen Jay",
-    "email_count": 367,
-    "primary_style": "b2b-tactical-specificity",
-    "signature_patterns": [
-      "exact step-by-step process breakdowns",
-      "screenshot-style specificity with tools and numbers",
-      "ROI framing that makes the math obvious",
-      "steal this generosity that builds trust through openness",
-      "content that IS the proof of expertise"
-    ],
-    "best_for": [
-      "B2B service provider content",
-      "lead generation how-to posts",
-      "tactical linkedin carousels",
-      "cold outreach templates",
-      "agency content"
-    ],
-    "voice_traits": {
-      "energy": "medium",
-      "formality": "low",
-      "humor": "low",
-      "storytelling": "low",
-      "contrarian": "low"
+    {
+      "key": "liam_ottley",
+      "display_name": "Liam Ottley",
+      "emails": ["admin@liamottley.com"],
+      "domains": ["liamottley.com"],
+      "specialties": ["AI agencies", "automation", "operators", "systems"],
+      "best_for": ["AI offers", "automation angles", "modern agency content"],
+      "style_traits": ["tech-forward", "modern", "concise", "builder-oriented"]
     },
-    "content_type_fit": {
-      "cold_email": 7,
-      "linkedin_post_authority": 6,
-      "linkedin_post_story": 3,
-      "linkedin_post_tactical": 10,
-      "article": 7,
-      "newsletter": 5,
-      "social_caption": 6
-    }
-  },
-  {
-    "name": "Liam Ottley",
-    "email_count": 463,
-    "primary_style": "ai-technical-demystifier",
-    "signature_patterns": [
-      "demystifying complex technology for business audiences",
-      "the stack behind breakdowns without jargon overload",
-      "build-in-public transparency with revenue and tools",
-      "future-casting with receipts not speculation",
-      "bridging technology understanding and business application"
-    ],
-    "best_for": [
-      "AI agency content",
-      "tech founder posts",
-      "SaaS content",
-      "build-in-public narratives",
-      "technology-meets-business content"
-    ],
-    "voice_traits": {
-      "energy": "high",
-      "formality": "medium",
-      "humor": "low",
-      "storytelling": "medium",
-      "contrarian": "medium"
+    {
+      "key": "todd_brown",
+      "display_name": "Todd Brown",
+      "emails": ["support@marketingfunnelautomation.com"],
+      "domains": ["toddbrown.me", "marketingfunnelautomation.com"],
+      "specialties": ["funnels", "mechanisms", "E5 method", "marketing education"],
+      "best_for": ["mechanism reveals", "funnel messaging", "launch education"],
+      "style_traits": ["mechanism-led", "strategic", "funnel-oriented", "launch-aware"]
     },
-    "content_type_fit": {
-      "cold_email": 6,
-      "linkedin_post_authority": 7,
-      "linkedin_post_story": 5,
-      "linkedin_post_tactical": 9,
-      "article": 8,
-      "newsletter": 6,
-      "social_caption": 8
+    {
+      "key": "tom_bilyeu",
+      "display_name": "Tom Bilyeu",
+      "emails": ["tombilyeu@impacttheory.com"],
+      "domains": ["impacttheory.com", "impacttheoryuniversity.com"],
+      "specialties": ["mindset", "motivation", "personal development", "impact"],
+      "best_for": ["mindset content", "belief shifts", "inspirational angles"],
+      "style_traits": ["mindset-driven", "inspirational", "personal", "lowercase-friendly"]
+    },
+    {
+      "key": "perry_marshall",
+      "display_name": "Perry Marshall",
+      "emails": [],
+      "domains": ["perrymarshall.com"],
+      "specialties": ["80/20 principle", "Google Ads", "traffic", "market selection", "simplification"],
+      "best_for": ["traffic strategy", "market selection frameworks", "80/20 analysis", "business simplification"],
+      "style_traits": ["analytical", "framework-driven", "contrarian", "science-backed"]
+    },
+    {
+      "key": "joe_sugarman",
+      "display_name": "Joe Sugarman",
+      "emails": [],
+      "domains": [],
+      "specialties": ["direct response print", "long-form ads", "storytelling", "product launches"],
+      "best_for": ["print ad copy", "product storytelling", "curiosity-driven long copy"],
+      "style_traits": ["conversational", "detail-rich", "curiosity-driven", "classic direct response"]
+    },
+    {
+      "key": "ken_mccarthy",
+      "display_name": "Ken McCarthy",
+      "emails": [],
+      "domains": [],
+      "specialties": ["internet marketing history", "early online advertising", "direct response online"],
+      "best_for": ["internet marketing fundamentals", "advertising history", "online direct response"],
+      "style_traits": ["pioneer", "historical", "foundational", "systems-thinker"]
+    },
+    {
+      "key": "fred_catona",
+      "display_name": "Fred Catona",
+      "emails": [],
+      "domains": [],
+      "specialties": ["radio advertising", "direct response radio", "media buying", "infomercials"],
+      "best_for": ["radio copy", "media buying strategy", "broadcast direct response"],
+      "style_traits": ["broadcast-oriented", "results-driven", "media-savvy", "entrepreneurial"]
+    },
+    {
+      "key": "greg_renker",
+      "display_name": "Greg Renker",
+      "emails": [],
+      "domains": [],
+      "specialties": ["infomercials", "television direct response", "celebrity endorsements", "scaling"],
+      "best_for": ["TV direct response", "infomercial strategy", "celebrity-driven campaigns"],
+      "style_traits": ["television-native", "scale-focused", "brand-building", "classic direct response"]
+    },
+    {
+      "key": "dan_kennedy",
+      "display_name": "Dan Kennedy",
+      "emails": [],
+      "domains": ["nobsinnercircle.com"],
+      "specialties": ["direct response", "info marketing", "sales letters", "magnetic marketing"],
+      "best_for": ["sales letters", "direct mail", "info product launches", "no BS marketing strategy"],
+      "style_traits": ["no-nonsense", "contrarian", "long-form", "aggressive"]
+    },
+    {
+      "key": "gary_bencivenga",
+      "display_name": "Gary Bencivenga",
+      "emails": [],
+      "domains": [],
+      "specialties": ["direct mail", "headline writing", "controls", "A/B testing"],
+      "best_for": ["headline craft", "control-beating copy", "direct mail mastery"],
+      "style_traits": ["precise", "research-intensive", "classic direct response", "master craftsman"]
+    },
+    {
+      "key": "gordon_grossman",
+      "display_name": "Gordon Grossman",
+      "emails": [],
+      "domains": [],
+      "specialties": ["direct mail", "subscription marketing", "magazine promotions", "list strategy"],
+      "best_for": ["subscription copy", "direct mail packages", "list segmentation"],
+      "style_traits": ["methodical", "data-driven", "classic direct response", "list-focused"]
     }
-  }
-]
+  ]
+}
